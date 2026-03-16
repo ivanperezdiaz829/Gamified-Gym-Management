@@ -1,38 +1,68 @@
-<div style="font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
-  
-  <h2>🏋️‍♂️ Crear Nueva Clase para el Gimnasio</h2>
+<div class="gym-dark-theme">
 
-  <form (ngSubmit)="saveClass()" style="display: flex; flex-direction: column; gap: 10px;">
+  <header class="main-header">
+    <div class="brand-logo">
+      <span class="text-white">Gym</span> <span class="text-blue">Management</span>
+    </div>
+  </header>
+
+  <main class="content-wrapper">
     
-    <label>Nombre de la clase:</label>
-    <input type="text" [(ngModel)]="newClass.name" name="name" placeholder="Ej. Crossfit, Yoga..." required>
+    <div class="panel-container">
+      <h2 class="panel-title">🏋️‍♂️ CREATE A NEW CLASS</h2>
 
-    <label>Instructor:</label>
-    <input type="text" [(ngModel)]="newClass.instructor" name="instructor" placeholder="Nombre del entrenador" required>
+      <form (ngSubmit)="saveClass()" class="gym-form">
+        
+        <div class="form-group">
+          <label>CLASS NAME</label>
+          <input type="text" [(ngModel)]="newClass.name" name="name" placeholder="e.g. Crossfit, Yoga..." required>
+        </div>
 
-    <label>Capacidad máxima:</label>
-    <input type="number" [(ngModel)]="newClass.capacity" name="capacity" min="1" required>
+        <div class="form-group">
+          <label>INSTRUCTOR</label>
+          <input type="text" [(ngModel)]="newClass.instructor" name="instructor" placeholder="Instructor name" required>
+        </div>
 
-    <button type="submit" style="padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-      Guardar Clase
-    </button>
-  </form>
+        <div class="form-group">
+          <label>MAX CAPACITY</label>
+          <div class="number-stepper">
+            <button type="button" class="stepper-btn" (click)="decrementCapacity()">-</button>
 
-  <hr style="margin: 30px 0;">
+            <input 
+              type="number" 
+              [(ngModel)]="newClass.capacity" 
+              name="capacity"
+              readonly>
 
-  <h3>Clases Registradas:</h3>
-  
-  @if (classesList().length === 0) {
-    <p style="color: gray;">Aún no hay clases. ¡Crea la primera!</p>
-  } @else {
-    <ul>
-      @for (gymClass of classesList(); track $index) {
-        <li style="margin-bottom: 10px;">
-          <strong>{{ gymClass.name }}</strong> (Instructor: {{ gymClass.instructor }}) 
-          - Capacidad: {{ gymClass.capacity }} personas
-        </li>
+            <button type="button" class="stepper-btn" (click)="incrementCapacity()">+</button>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Save Class</button>
+      </form>
+
+      <hr class="neon-divider">
+
+      <h3 class="list-title">Registered Classes:</h3>
+      
+      @if (classesList().length === 0) {
+        <div class="empty-state">
+          <p>No classes registered yet.</p>
+        </div>
+      } @else {
+        <ul class="classes-list">
+          @for (gymClass of classesList(); track $index) {
+            <li class="class-item">
+              <div class="class-info">
+                <strong>{{ gymClass.name }}</strong> 
+                <span class="instructor">with {{ gymClass.instructor }}</span>
+              </div>
+              <span class="capacity">{{ gymClass.capacity }} pax</span>
+            </li>
+          }
+        </ul>
       }
-    </ul>
-  }
+    </div>
 
+  </main>
 </div>

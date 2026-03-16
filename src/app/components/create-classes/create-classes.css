@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700&display=swap');
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #111111;
+  margin: 0;
+  padding: 0;
+}
+
+.gym-dark-theme {
+  font-family: 'Roboto', sans-serif;
+  color: #eeeeee;
+  background-color: #111111;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* --- HEADER Y LOGO --- */
+.main-header {
+  background-color: #000000;
+  padding: 15px 30px;
+  border-bottom: 2px solid #333;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.brand-logo {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.text-white { color: #ffffff; }
+.text-blue { color: #007bff; }
+
+/* --- MAIN CONTAINER --- */
+.content-wrapper {
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  background-color: #111111;
+}
+
+.panel-container {
+  max-width: 500px;
+  width: 100%;
+  padding: 30px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  border: 1px solid #333;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+}
+
+.panel-title {
+  font-family: 'Oswald', sans-serif;
+  text-align: center;
+  color: #ffffff;
+  font-size: 1.8rem;
+  margin-top: 0;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* --- FORM & INPUTS --- */
+.gym-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #aaaaaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-group input {
+  padding: 14px;
+  background-color: #0e0e0e;
+  border: 2px solid #333;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #39ff14;
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+}
+
+/* --- CUSTOM NUMBER STEPPER (+ y -) --- */
+.number-stepper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.number-stepper input {
+  text-align: center;
+}
+
+.stepper-btn {
+  width: 50px;
+  height: 50px;
+  background-color: #0e0e0e;
+  color: #39ff14;
+  border: 2px solid #333;
+  border-radius: 8px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepper-btn:hover {
+  border-color: #39ff14;
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+  background-color: #111;
+}
+
+.stepper-btn:active {
+  transform: translateY(2px);
+}
+
+.number-stepper input {
+  flex: 1; /* Para que ocupe el espacio central */
+  text-align: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.4rem;
+}
+
+/* --- BOTÓN GUARDAR --- */
+.submit-btn {
+  margin-top: 15px;
+  padding: 16px;
+  background-color: #39ff14;
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.2s ease;
+}
+
+.submit-btn:hover {
+  background-color: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+}
+
+/* --- LISTA DE CLASES --- */
+.neon-divider {
+  border: none;
+  height: 2px;
+  background-color: #333;
+  margin: 40px 0;
+  position: relative;
+}
+
+.neon-divider::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 2px;
+  background-color: #39ff14;
+  box-shadow: 0 0 10px #39ff14;
+}
+
+.list-title {
+  font-family: 'Oswald', sans-serif;
+  color: #ffffff;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.empty-state {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+  border: 1px dashed #333;
+  border-radius: 6px;
+}
+
+.classes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.class-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  background-color: #111111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.class-item:hover {
+  border-color: #39ff14;
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+  transform: scale(1.02);
+}
+
+.class-info strong {
+  color: #ffffff;
+  font-size: 1.2rem;
+  display: block;
+  font-family: 'Oswald', sans-serif;
+}
+
+.class-info .instructor {
+  font-size: 0.9rem;
+  color: #aaaaaa;
+}
+
+.capacity {
+  color: #39ff14;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
