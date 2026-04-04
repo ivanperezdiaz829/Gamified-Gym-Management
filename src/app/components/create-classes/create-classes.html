@@ -2,7 +2,13 @@
   <main class="content-wrapper">
     
     <div class="panel-container">
-      <h2 class="panel-title">🏋️‍♂️ CREATE A NEW CLASS</h2>
+      <h2 class="panel-title">
+        @if (isEditMode) {
+          ✏️ EDIT CLASS
+        } @else {
+          🏋️‍♂️ CREATE A NEW CLASS
+        }
+      </h2>
 
       <form (ngSubmit)="saveClass()" class="gym-form">
         
@@ -41,13 +47,25 @@
           </div>
         </div>
 
-        <button type="submit" class="submit-btn">Save Class</button>
+        <div class="button-group">
+          <button type="submit" class="submit-btn">
+            @if (isEditMode) {
+              Update Class
+            } @else {
+              Save Class
+            }
+          </button>
+
+          @if (isEditMode) {
+            <button type="button" class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+          }
+        </div>
       </form>
 
       <hr class="neon-divider">
 
-      <h3 class="list-title">Registered Classes:</h3>
-      
+      <h3 class="list-title">My Classes:</h3>
+
       @if (classesList().length === 0) {
         <div class="empty-state">
           <p>No classes registered yet.</p>
@@ -60,9 +78,60 @@
                 <strong>{{ gymClass.name }}</strong>
                 <span class="instructor">with {{ gymClass.instructor }}</span>
                 <span class="class-datetime">{{ gymClass.startDate }} at {{ gymClass.startTime }}</span>
+                @if (hasClassStarted(gymClass)) {
+                  <span class="class-status started">✓ Started</span>
+                } @else {
+                  <span class="class-status upcoming">● Upcoming</span>
+                }
               </div>
-              <span class="capacity">{{ gymClass.capacity }} pax</span>
+              <div class="class-actions">
+                <div class="attendance-info">
+                  <span class="attendance-count">
+                    👥 {{ getAttendeeCount(gymClass) }}/{{ gymClass.capacity }}
+                  </span>
+                  <button
+                    class="view-attendance-btn"
+                    (click)="toggleAttendance(gymClass)"
+                    title="View attendance">
+                    @if (isAttendanceExpanded(gymClass.id!)) {
+                      ▼ Hide
+                    } @else {
+                      ▶ View
+                    }
+                  </button>
+                </div>
+                <div class="action-buttons">
+                  @if (canEditOrDelete(gymClass)) {
+                    <button class="edit-btn" (click)="editClass(gymClass)" title="Edit class">
+                      ✏️
+                    </button>
+                    <button class="delete-btn" (click)="deleteClass(gymClass)" title="Delete class">
+                      🗑️
+                    </button>
+                  } @else {
+                    <span class="disabled-note">Past class</span>
+                  }
+                </div>
+              </div>
             </li>
+
+            @if (isAttendanceExpanded(gymClass.id!)) {
+              <li class="attendance-section">
+                <h4 class="attendance-title">📋 Attendance List</h4>
+                @if (getAttendance(gymClass.id!).length === 0) {
+                  <p class="no-attendance">No reservations yet.</p>
+                } @else {
+                  <ul class="attendance-list">
+                    @for (reservation of getAttendance(gymClass.id!); track reservation.id) {
+                      <li class="attendee-item">
+                        <span class="attendee-name">{{ reservation.traineeName }}</span>
+                        <span class="booked-date">Booked: {{ reservation.bookedAt | date:'short' }}</span>
+                      </li>
+                    }
+                  </ul>
+                }
+              </li>
+            }
           }
         </ul>
       }

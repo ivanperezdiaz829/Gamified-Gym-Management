@@ -1,0 +1,59 @@
+<div class="gym-dark-theme">
+  <main class="content-wrapper">
+
+    <div class="panel-container">
+      <h2 class="panel-title">BOOK A CLASS</h2>
+
+      @if (isLoading()) {
+        <div class="loading-state">
+          <p>Loading classes...</p>
+        </div>
+      } @else {
+        <h3 class="section-title">Available Classes</h3>
+
+        @if (availableClasses().length === 0) {
+          <div class="empty-state">
+            <p>No available classes to book at the moment.</p>
+          </div>
+        } @else {
+          <ul class="classes-list">
+            @for (gymClass of availableClasses(); track gymClass.id) {
+              <li class="class-item">
+                <div class="class-info">
+                  <strong>{{ gymClass.name }}</strong>
+                  <span class="instructor">with {{ gymClass.instructor }}</span>
+                  <span class="class-datetime">{{ gymClass.startDate }} at {{ gymClass.startTime }}</span>
+                  <span class="available-spots">{{ getAvailableSpots(gymClass) }} spots left</span>
+                </div>
+                <button class="book-btn" (click)="bookClass(gymClass)">Book</button>
+              </li>
+            }
+          </ul>
+        }
+
+        <hr class="neon-divider">
+
+        <h3 class="section-title">My Reservations</h3>
+
+        @if (myReservations().length === 0) {
+          <div class="empty-state">
+            <p>You have no reservations yet.</p>
+          </div>
+        } @else {
+          <ul class="reservations-list">
+            @for (reservation of myReservations(); track reservation.id) {
+              <li class="reservation-item">
+                <div class="class-info">
+                  <strong>{{ reservation.className }}</strong>
+                  <span class="class-datetime">{{ reservation.classStartDate }} at {{ reservation.classStartTime }}</span>
+                  <span class="booked-at">Booked on {{ reservation.bookedAt | date:'short' }}</span>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      }
+    </div>
+
+  </main>
+</div>

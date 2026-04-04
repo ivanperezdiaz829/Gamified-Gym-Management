@@ -1,0 +1,40 @@
+<div class="gym-dark-theme">
+  <main class="content-wrapper">
+
+    <div class="panel-container">
+      <h2 class="panel-title">MY RESERVATIONS</h2>
+
+      @if (isLoading()) {
+        <div class="loading-state">
+          <p>Loading reservations...</p>
+        </div>
+      } @else {
+        @if (myReservations().length === 0) {
+          <div class="empty-state">
+            <p>You have no upcoming reservations.</p>
+          </div>
+        } @else {
+          <p class="info-text">You can cancel your reservations before the class starts.</p>
+
+          <ul class="reservations-list">
+            @for (reservation of myReservations(); track reservation.id) {
+              <li class="reservation-item">
+                <div class="class-info">
+                  <strong>{{ reservation.className }}</strong>
+                  <span class="class-datetime">{{ reservation.classStartDate }} at {{ reservation.classStartTime }}</span>
+                  <span class="booked-at">Booked on {{ reservation.bookedAt | date:'short' }}</span>
+                </div>
+                @if (canCancel(reservation)) {
+                  <button class="cancel-btn" (click)="cancelReservation(reservation)">Cancel</button>
+                } @else {
+                  <span class="status-text">Already started</span>
+                }
+              </li>
+            }
+          </ul>
+        }
+      }
+    </div>
+
+  </main>
+</div>

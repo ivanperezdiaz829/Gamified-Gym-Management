@@ -152,9 +152,15 @@ input::-webkit-inner-spin-button {
   font-size: 1.4rem;
 }
 
-/* --- BOTÓN GUARDAR --- */
-.submit-btn {
+/* --- BOTONES DEL FORMULARIO --- */
+.button-group {
+  display: flex;
+  gap: 10px;
   margin-top: 15px;
+}
+
+.submit-btn {
+  flex: 1;
   padding: 16px;
   background-color: #39ff14;
   color: #000000;
@@ -172,6 +178,26 @@ input::-webkit-inner-spin-button {
 .submit-btn:hover {
   background-color: #ffffff;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+}
+
+.cancel-btn {
+  padding: 16px 24px;
+  background-color: #333;
+  color: #ffffff;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: 2px solid #666;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background-color: #555;
+  border-color: #888;
 }
 
 /* --- LISTA DE CLASES --- */
@@ -229,12 +255,13 @@ input::-webkit-inner-spin-button {
   border: 1px solid #333;
   border-radius: 8px;
   transition: all 0.3s ease;
+  gap: 15px;
 }
 
 .class-item:hover {
   border-color: #39ff14;
   box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 .class-info strong {
@@ -257,15 +284,188 @@ input::-webkit-inner-spin-button {
   margin-top: 4px;
 }
 
-.capacity {
+.class-info {
+  flex: 1;
+}
+
+.class-info .class-status {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.class-info .class-status.upcoming {
+  background-color: rgba(57, 255, 20, 0.2);
+  color: #39ff14;
+  border: 1px solid #39ff14;
+}
+
+.class-info .class-status.started {
+  background-color: rgba(136, 136, 136, 0.2);
+  color: #888;
+  border: 1px solid #666;
+}
+
+.class-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.attendance-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.attendance-count {
   color: #39ff14;
   font-family: 'Oswald', sans-serif;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+  white-space: nowrap;
+}
+
+.view-attendance-btn {
+  padding: 8px 16px;
+  background-color: #1a1a1a;
+  color: #39ff14;
+  border: 1px solid #39ff14;
+  border-radius: 6px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.view-attendance-btn:hover {
+  background-color: #39ff14;
+  color: #000000;
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.edit-btn,
+.delete-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: #ffffff;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+  box-shadow: 0 0 15px rgba(220, 53, 69, 0.5);
+  transform: scale(1.1);
+}
+
+.disabled-note {
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+/* --- ATTENDANCE SECTION --- */
+.attendance-section {
+  background-color: #0a0a0a;
+  border: 1px solid #39ff14;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: -15px;
+  margin-bottom: 0;
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.1);
+}
+
+.attendance-title {
+  font-family: 'Oswald', sans-serif;
+  color: #39ff14;
+  font-size: 1.1rem;
+  margin: 0 0 15px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.no-attendance {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+}
+
+.attendance-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.attendee-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: #111111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.attendee-item:hover {
+  border-color: #39ff14;
+  box-shadow: 0 0 8px rgba(57, 255, 20, 0.2);
+}
+
+.attendee-name {
+  color: #ffffff;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.booked-date {
+  color: #888;
+  font-size: 0.85rem;
+  font-style: italic;
 }
