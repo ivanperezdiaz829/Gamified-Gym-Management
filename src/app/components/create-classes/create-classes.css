@@ -247,6 +247,14 @@ input::-webkit-inner-spin-button {
 .class-info .instructor {
   font-size: 0.9rem;
   color: #aaaaaa;
+  display: block;
+}
+
+.class-info .class-datetime {
+  font-size: 0.85rem;
+  color: #007bff;
+  display: block;
+  margin-top: 4px;
 }
 
 .capacity {

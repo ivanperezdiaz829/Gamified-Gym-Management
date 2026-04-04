@@ -1,11 +1,4 @@
 <div class="gym-dark-theme">
-
-  <header class="main-header">
-    <div class="brand-logo">
-      <span class="text-white">Gym</span> <span class="text-blue">Management</span>
-    </div>
-  </header>
-
   <main class="content-wrapper">
     
     <div class="panel-container">
@@ -24,13 +17,23 @@
         </div>
 
         <div class="form-group">
+          <label>START DATE</label>
+          <input type="date" [(ngModel)]="newClass.startDate" name="startDate" required>
+        </div>
+
+        <div class="form-group">
+          <label>START TIME</label>
+          <input type="time" [(ngModel)]="newClass.startTime" name="startTime" required>
+        </div>
+
+        <div class="form-group">
           <label>MAX CAPACITY</label>
           <div class="number-stepper">
             <button type="button" class="stepper-btn" (click)="decrementCapacity()">-</button>
 
-            <input 
-              type="number" 
-              [(ngModel)]="newClass.capacity" 
+            <input
+              type="number"
+              [(ngModel)]="newClass.capacity"
               name="capacity"
               readonly>
 
@@ -51,11 +54,12 @@
         </div>
       } @else {
         <ul class="classes-list">
-          @for (gymClass of classesList(); track $index) {
+          @for (gymClass of classesList(); track gymClass.id) {
             <li class="class-item">
               <div class="class-info">
-                <strong>{{ gymClass.name }}</strong> 
+                <strong>{{ gymClass.name }}</strong>
                 <span class="instructor">with {{ gymClass.instructor }}</span>
+                <span class="class-datetime">{{ gymClass.startDate }} at {{ gymClass.startTime }}</span>
               </div>
               <span class="capacity">{{ gymClass.capacity }} pax</span>
             </li>

@@ -1,2 +1,57 @@
-<app-create-classes></app-create-classes>
+<div class="app-container">
+  <header class="main-header">
+    <div class="brand-logo">
+      <span class="text-white">Gym</span> <span class="text-blue">Management</span>
+    </div>
+
+    <div class="role-selector">
+      <button
+        class="role-btn"
+        [class.active]="currentUserRole() === 'trainer'"
+        (click)="switchRole('trainer')">
+        Trainer
+      </button>
+      <button
+        class="role-btn"
+        [class.active]="currentUserRole() === 'trainee'"
+        (click)="switchRole('trainee')">
+        Trainee
+      </button>
+    </div>
+  </header>
+
+  <nav class="navigation">
+    @if (currentUserRole() === 'trainer') {
+      <button
+        class="nav-btn"
+        [class.active]="currentView() === 'create'"
+        (click)="setView('create')">
+        Create Classes
+      </button>
+    } @else {
+      <button
+        class="nav-btn"
+        [class.active]="currentView() === 'book'"
+        (click)="setView('book')">
+        Book Classes
+      </button>
+      <button
+        class="nav-btn"
+        [class.active]="currentView() === 'cancel'"
+        (click)="setView('cancel')">
+        My Reservations
+      </button>
+    }
+  </nav>
+
+  <div class="content">
+    @if (currentView() === 'create') {
+      <app-create-classes></app-create-classes>
+    } @else if (currentView() === 'book') {
+      <app-book-classes></app-book-classes>
+    } @else if (currentView() === 'cancel') {
+      <app-cancel-reservations></app-cancel-reservations>
+    }
+  </div>
+</div>
 <router-outlet></router-outlet>
