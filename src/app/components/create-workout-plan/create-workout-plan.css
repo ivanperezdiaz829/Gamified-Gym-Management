@@ -1,0 +1,134 @@
+.create-plan-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  color: #aaaaaa;
+}
+
+.text-white { color: #ffffff; }
+.text-blue { color: #007bff; }
+
+.form-card {
+  background-color: #1a1a1a;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  border: 1px solid #333;
+  margin-top: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.dark-input {
+  background-color: #111111;
+  border: 1px solid #333;
+  color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.dark-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.exercise-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background-color: #222;
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.exercise-number {
+  color: #39ff14;
+  font-weight: bold;
+  font-family: 'Oswald', sans-serif;
+  width: 25px;
+}
+
+.flex-2 { flex: 2; }
+.flex-1 { flex: 1; min-width: 70px; }
+
+button {
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-remove {
+  background-color: transparent;
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
+  padding: 8px 12px;
+}
+
+.btn-remove:hover {
+  background-color: #ff4d4d;
+  color: #ffffff;
+}
+
+.btn-add {
+  background-color: transparent;
+  color: #39ff14;
+  border: 1px dashed #39ff14;
+  padding: 12px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.btn-add:hover {
+  background-color: rgba(57, 255, 20, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+}
+
+.btn-submit {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1rem;
+}
+
+.btn-submit:hover {
+  background-color: #0056b3;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .exercise-row {
+    flex-wrap: wrap;
+  }
+  .flex-2 { width: 100%; flex: none; }
+}

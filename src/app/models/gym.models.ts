@@ -41,3 +41,26 @@ export interface Reservation {
   classStartTime: string;
   bookedAt: string;
 }
+
+export interface Exercise {
+  name: string;
+  sets: number;
+  reps: number;
+  notes?: string;
+}
+
+export interface WorkoutPlan {
+  id?: string; // Optional because Firebase generates this
+  trainerId: string;
+  traineeId?: string; // The user assigned to this plan
+  planName: string;
+  exercises: Exercise[];
+  createdAt: Date;
+}
+
+export interface Trainee {
+  uid: string;
+  name: string;
+  email: string;
+  role: 'trainee';
+}

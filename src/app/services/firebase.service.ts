@@ -22,7 +22,7 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { environment } from '../../environments/environment';
-import { GymClass, Reservation, User, UserRole } from '../models/gym.models';
+import { GymClass, Reservation, User, UserRole, WorkoutPlan } from '../models/gym.models';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +43,7 @@ export class FirebaseService {
   // Fixed IDs for consistent role switching
   private readonly FIXED_TRAINER_ID = 'trainer-001';
   private readonly FIXED_TRAINEE_ID = 'trainee-001';
+  private localWorkoutPlans: WorkoutPlan[] = []; // Local state for workout plans
 
   constructor() {
     // Check if Firebase is already initialized
@@ -205,5 +206,37 @@ export class FirebaseService {
 
   canEditOrCancelClass(gymClass: GymClass): boolean {
     return !this.hasClassStarted(gymClass);
+  }
+
+async getTrainees(): Promise<User[]> {
+    // Return a fake trainee immediately without touching Firebase
+    return [{
+      id: this.FIXED_TRAINEE_ID,
+      email: 'trainee@gym.com',
+      name: 'Test Trainee',
+      role: 'trainee'
+    }];
+  }
+
+  async assignWorkoutPlan(plan: WorkoutPlan): Promise<string> {
+    // 1. Generate a fake ID
+    const fakeId = 'plan-' + Math.random().toString(36).substring(2, 9);
+    
+    // 2. Create the final object
+    const newPlan = {
+      ...plan,
+      id: fakeId,
+      createdAt: new Date()
+    };
+
+    // 3. Save it to our local array instead of Firebase
+    this.localWorkoutPlans.push(newPlan);
+    
+    return fakeId;
+  }
+
+  async getTrainerWorkoutPlans(trainerId: string): Promise<WorkoutPlan[]> {
+    // Filter our local array to only show plans made by this trainer
+    return this.localWorkoutPlans.filter(plan => plan.trainerId === trainerId);
   }
 }

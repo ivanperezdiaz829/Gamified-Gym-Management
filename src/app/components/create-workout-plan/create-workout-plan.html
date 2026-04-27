@@ -1,0 +1,30 @@
+<div class="create-plan-container">
+  <h2 class="text-white">Create a New Workout Plan</h2>
+
+  <div class="form-card">
+
+    <div class="form-group">
+      <label>Plan Name:</label>
+      <input type="text" [(ngModel)]="planName" class="dark-input" placeholder="e.g., Hypertrophy Phase 1">
+    </div>
+
+    <h3 class="text-blue">Exercises</h3>
+    
+    <div class="exercise-list">
+      <div class="exercise-row" *ngFor="let ex of exercises; let i = index">
+        <div class="exercise-number">{{ i + 1 }}</div>
+        <input type="text" [(ngModel)]="ex.name" class="dark-input flex-2" placeholder="Exercise Name (e.g., Bench Press)">
+        <input type="number" [(ngModel)]="ex.sets" class="dark-input flex-1" placeholder="Sets">
+        <input type="number" [(ngModel)]="ex.reps" class="dark-input flex-1" placeholder="Reps">
+        
+        <button class="btn-remove" (click)="removeExercise(i)" title="Remove Exercise">✕</button>
+      </div>
+    </div>
+
+    <button class="btn-add" (click)="addExercise()">+ Add Another Exercise</button>
+
+    <div class="form-actions">
+      <button class="btn-submit" (click)="submitPlan()">Save & Assign Plan</button>
+    </div>
+  </div>
+</div>

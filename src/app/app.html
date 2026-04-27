@@ -28,6 +28,14 @@
         (click)="setView('create')">
         Create Classes
       </button>
+      
+      <button
+        class="nav-btn"
+        [class.active]="currentView() === 'workout-zone'"
+        (click)="setView('workout-zone')">
+        Workout Plans
+      </button>
+
     } @else {
       <button
         class="nav-btn"
@@ -47,6 +55,8 @@
   <div class="content">
     @if (currentView() === 'create') {
       <app-create-classes></app-create-classes>
+    } @else if (currentView() === 'workout-zone') {
+      <app-workout-zone></app-workout-zone>
     } @else if (currentView() === 'book') {
       <app-book-classes></app-book-classes>
     } @else if (currentView() === 'cancel') {

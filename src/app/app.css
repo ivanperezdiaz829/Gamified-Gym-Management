@@ -96,3 +96,50 @@
 .content {
   /* Content is handled by child components */
 }
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+   ========================================= */
+@media (max-width: 768px) {
+  /* Stack the header on small screens */
+  .main-header {
+    flex-direction: column;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  /* Make the role selector stretch to fill the width */
+  .role-selector {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .role-btn {
+    flex: 1; /* Buttons share the space equally */
+    text-align: center;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  /* Make navigation swipeable like a native app tab bar */
+  .navigation {
+    padding: 12px 15px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    flex-wrap: nowrap; /* Prevent wrapping to next line */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    
+    /* Hide scrollbar for a cleaner look */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+  .navigation::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome/Safari/Webkit */
+  }
+
+  .nav-btn {
+    flex-shrink: 0; /* Prevents the buttons from squishing when scrolling */
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+}
