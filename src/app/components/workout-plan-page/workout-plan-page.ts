@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase.service';
@@ -16,79 +16,95 @@ export class WorkoutZoneComponent implements OnInit {
   viewMode: 'list' | 'create' = 'list';
   plans: WorkoutPlan[] = [];
   trainees: User[] = [];
-  
-  // Maps plan IDs to the currently selected trainee in the dropdown
   selectedTraineeForPlan: { [planId: string]: string } = {};
+  planToEdit: WorkoutPlan | null = null;
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(
+    private firebaseService: FirebaseService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadData();
   }
 
-async loadData() {
+  async loadData() {
     const currentUser = this.firebaseService.getCurrentUser();
     
-    try {
-      // 1. Try to load real data from Firebase
-      this.trainees = await this.firebaseService.getTrainees();
-      const allPlans = await this.firebaseService.getTrainerWorkoutPlans(currentUser.id);
-      this.plans = allPlans.filter(plan => !plan.traineeId);
-      
-    } catch (error) {
-      // 2. If Firebase fails (like your 400 error), catch it and load Mock Data!
-      console.error('Firebase failed, loading mock data for UI testing:', error);
-      
-      this.trainees = [{
-        id: 'trainee-001',
-        email: 'trainee@gym.com',
-        name: 'Mock Trainee',
-        role: 'trainee'
-      }];
+    // 1. Cargar trainees
+    this.trainees = await this.firebaseService.getTrainees();
+    
+    // 2. Cargar todos los planes y filtrar para quedarnos solo con las "plantillas" (las que no tienen traineeId)
+    const allPlans = await this.firebaseService.getTrainerWorkoutPlans(currentUser.id);
+    this.plans = allPlans.filter(plan => !plan.traineeId);
 
-      this.plans = [{
-        id: 'mock-plan-1',
-        trainerId: currentUser.id,
-        planName: 'Sample Hypertrophy Plan',
-        exercises: [
-          { name: 'Bench Press', sets: 3, reps: 10 },
-          { name: 'Squat', sets: 4, reps: 8 }
-        ],
-        createdAt: new Date()
-      }];
+    // 3. Auto-seleccionar al trainee por defecto para todos los planes
+    if (this.trainees.length > 0) {
+      const defaultTraineeId = this.trainees[0].id;
+      this.plans.forEach(plan => {
+        if (plan.id) {
+          this.selectedTraineeForPlan[plan.id] = defaultTraineeId;
+        }
+      });
     }
+
+    // 4. Obligamos a Angular a actualizar la pantalla con los nuevos datos
+    this.cdr.detectChanges(); 
   }
 
   async assignPlan(plan: WorkoutPlan) {
-    const traineeId = this.selectedTraineeForPlan[plan.id!];
+    if (!plan.id) return;
+
+    const traineeId = this.selectedTraineeForPlan[plan.id];
     
     if (!traineeId) {
       alert('Please select a trainee first!');
       return;
     }
 
-    
-    // Duplicate the plan template and assign it to the selected trainee
+    // Duplicar la plantilla del plan y asignársela al trainee seleccionado
     const assignedPlan: WorkoutPlan = {
       ...plan,
       traineeId: traineeId,
       createdAt: new Date()
     };
     
-    delete assignedPlan.id; // Let Firebase generate a new ID for the assigned copy
+    // Eliminamos el ID antiguo para que el servicio (o Firebase) genere uno nuevo para esta asignación
+    delete assignedPlan.id; 
 
     try {
       await this.firebaseService.assignWorkoutPlan(assignedPlan);
       alert('Plan successfully assigned to trainee!');
-      this.selectedTraineeForPlan[plan.id!] = ''; // Reset dropdown
+      // Opcional: podrías recargar datos aquí si quieres, pero no es estrictamente necesario
     } catch (error) {
       console.error('Error assigning plan', error);
+      alert('Hubo un error al asignar el plan.');
     }
   }
 
-  // Called when the create component finishes saving a plan
+  // Función para abrir el formulario LIMPIO
+  openCreateMode() {
+    this.planToEdit = null;
+    this.viewMode = 'create';
+  }
+
+  // Función para abrir el formulario CON DATOS
+  editPlan(plan: WorkoutPlan) {
+    this.planToEdit = plan;
+    this.viewMode = 'create';
+  }
+
+  // Función para borrar
+  async deletePlan(planId: string | undefined) {
+    if (!planId) return;
+    if (confirm('¿Estás seguro de que quieres borrar esta plantilla? Los trainees que ya la tengan asignada no la perderán.')) {
+      await this.firebaseService.deleteWorkoutPlan(planId);
+      this.loadData();
+    }
+  }
+
   onPlanCreated() {
     this.viewMode = 'list';
-    this.loadData(); // Refresh the list
+    this.loadData();
   }
 }

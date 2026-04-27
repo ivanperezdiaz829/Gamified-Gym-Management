@@ -21,13 +21,102 @@
   border-top: 1px solid #333;
   padding-top: 15px;
 }
-.assign-section select { flex: 1; }
-.back-btn { margin-bottom: 20px; padding: 10px 15px; }
+.assign-section select { 
+  flex: 1; 
+}
+
+.back-btn { 
+  margin-bottom: 20px; 
+  padding: 10px 15px; 
+}
 
 /* Import the shared styles you already made for forms/buttons */
-.text-white { color: #ffffff; }
-.text-blue { color: #007bff; }
-.form-card { background-color: #1a1a1a; padding: 25px; border-radius: 8px; border: 1px solid #333; }
-.dark-input { background-color: #111111; border: 1px solid #333; color: #ffffff; padding: 10px; border-radius: 6px; }
-.btn-submit { background-color: #007bff; color: #ffffff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; }
-.btn-remove { background-color: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; border-radius: 6px; cursor: pointer; }
+.text-white { 
+  color: #ffffff; 
+}
+
+.text-blue { 
+  color: #007bff; 
+}
+
+.form-card { 
+  background-color: #1a1a1a; 
+  padding: 25px; 
+  border-radius: 8px; 
+  border: 1px solid #333; 
+}
+
+.dark-input { 
+  background-color: #111111; 
+  border: 1px solid #333; 
+  color: #ffffff; 
+  padding: 10px; 
+  border-radius: 6px; 
+}
+
+.btn-submit { 
+  background-color: #007bff; 
+  color: #ffffff; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 6px; 
+  cursor: pointer; 
+  font-family: 'Oswald', sans-serif; 
+  text-transform: uppercase; 
+}
+
+.btn-remove { 
+  background-color: transparent; 
+  color: #ff4d4d; 
+  border: 1px solid #ff4d4d; 
+  border-radius: 6px; cursor: pointer; 
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-edit {
+  background-color: transparent;
+  color: #aaaaaa;
+  border: 1px solid #aaaaaa;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.btn-edit:hover {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.btn-remove-plan {
+  background-color: transparent;
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-remove-plan:hover {
+  background-color: #ff4d4d;
+  color: #ffffff;
+}

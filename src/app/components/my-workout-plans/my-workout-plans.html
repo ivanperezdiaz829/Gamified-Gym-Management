@@ -1,0 +1,40 @@
+<div class="gym-dark-theme">
+  <main class="content-wrapper">
+
+    <div class="panel-container">
+      <h2 class="panel-title">MY WORKOUT PLANS</h2>
+
+      @if (myPlans.length === 0) {
+        <div class="empty-state">
+          <p>You have no assigned workout plans yet.</p>
+        </div>
+      } @else {
+        <p class="info-text">Review your assigned routines or remove the ones you have finished.</p>
+
+        <ul class="plans-list">
+          @for (plan of myPlans; track plan.id) {
+            <li class="plan-item">
+              
+              <div class="plan-info">
+                <strong>{{ plan.planName }}</strong>
+                <span class="plan-date">Assigned on {{ plan.createdAt | date:'short' }}</span>
+                
+                <div class="exercises-container">
+                  @for (ex of plan.exercises; track ex.name) {
+                    <span class="exercise-badge">
+                      {{ ex.name }} <span class="badge-highlight">({{ ex.sets }}x{{ ex.reps }})</span>
+                    </span>
+                  }
+                </div>
+              </div>
+
+              <button class="cancel-btn" (click)="removePlan(plan.id)">Remove</button>
+              
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+  </main>
+</div>

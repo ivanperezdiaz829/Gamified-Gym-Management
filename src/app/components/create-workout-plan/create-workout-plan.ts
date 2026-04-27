@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+// 1. Añade Input a tus importaciones
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../../services/firebase.service';
-import { Exercise, WorkoutPlan, User } from '../../models/gym.models';
+import { Exercise, WorkoutPlan } from '../../models/gym.models';
 
 @Component({
   selector: 'app-create-workout-plan',
@@ -12,24 +13,22 @@ import { Exercise, WorkoutPlan, User } from '../../models/gym.models';
   styleUrls: ['./create-workout-plan.css']
 })
 export class CreateWorkoutPlanComponent implements OnInit {
-  trainees: User[] = [];
-  selectedTraineeId: string = '';
-  planName: string = '';
   
-  // Start with one empty exercise row
+  // 2. Recibe el plan si estamos en modo edición
+  @Input() planToEdit: WorkoutPlan | null = null;
+  @Output() planCreated = new EventEmitter<void>();
+
+  planName: string = '';
   exercises: Exercise[] = [{ name: '', sets: 0, reps: 0 }];
 
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit() {
-    this.loadTrainees();
-  }
-
-  async loadTrainees() {
-    try {
-      this.trainees = await this.firebaseService.getTrainees();
-    } catch (error) {
-      console.error('Error loading trainees:', error);
+    // 3. Si recibimos un plan para editar, rellenamos el formulario
+    if (this.planToEdit) {
+      this.planName = this.planToEdit.planName;
+      // Hacemos una copia profunda de los ejercicios para no modificar el original hasta que no le demos a guardar
+      this.exercises = JSON.parse(JSON.stringify(this.planToEdit.exercises));
     }
   }
 
@@ -41,31 +40,38 @@ export class CreateWorkoutPlanComponent implements OnInit {
     this.exercises.splice(index, 1);
   }
 
-async submitPlan() {
-    // REMOVED the !this.selectedTraineeId check here:
+  async submitPlan() {
     if (!this.planName || this.exercises.length === 0) {
       alert("Please fill out all fields and add at least one exercise.");
       return;
     }
 
-    const currentUser = this.firebaseService.getCurrentUser();
-
-    const newPlan: WorkoutPlan = {
-      trainerId: currentUser.id,
-      // We don't need a traineeId here anymore since it's just a template!
-      planName: this.planName,
-      exercises: this.exercises,
-      createdAt: new Date() 
-    };
-
     try {
-      await this.firebaseService.assignWorkoutPlan(newPlan);
-      alert('Workout plan saved successfully!');
-      
-      // Reset the form
+      if (this.planToEdit && this.planToEdit.id) {
+        // MODO EDICIÓN
+        await this.firebaseService.updateWorkoutPlan(this.planToEdit.id, {
+          planName: this.planName,
+          exercises: this.exercises
+        });
+        alert('Workout plan actualizado correctamente!');
+      } else {
+        // MODO CREACIÓN
+        const currentUser = this.firebaseService.getCurrentUser();
+        const newPlan: WorkoutPlan = {
+          trainerId: currentUser.id,
+          planName: this.planName,
+          exercises: this.exercises,
+          createdAt: new Date()
+        };
+        await this.firebaseService.assignWorkoutPlan(newPlan);
+        alert('Workout plan guardado correctamente!');
+      }
+
+      // Limpiamos y avisamos de que hemos terminado
       this.planName = '';
       this.exercises = [{ name: '', sets: 0, reps: 0 }];
-      
+      this.planCreated.emit();
+
     } catch (error) {
       console.error('Error saving plan', error);
       alert('Failed to save workout plan.');

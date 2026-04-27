@@ -2,7 +2,7 @@
   @if (viewMode === 'list') {
     <div class="zone-header">
       <h2 class="text-white">Workout Plans Zone</h2>
-      <button class="btn-submit" (click)="viewMode = 'create'">+ Create New Plan</button>
+      <button class="btn-submit" (click)="openCreateMode()">+ Create New Plan</button>
     </div>
 
     <div class="plans-grid">
@@ -12,12 +12,20 @@
 
       @for (plan of plans; track plan.id) {
         <div class="form-card">
-          <h3 class="text-blue">{{ plan.planName }}</h3>
-          <p class="text-white" style="margin-bottom: 15px;">{{ plan.exercises.length }} Exercises</p>
+          
+          <div class="card-header">
+            <h3 class="text-blue" style="margin:0">{{ plan.planName }}</h3>
+            <div class="card-actions">
+              <button class="btn-edit" (click)="editPlan(plan)">Edit</button>
+              <button class="btn-remove-plan" (click)="deletePlan(plan.id)" title="Borrar Plantilla">✕</button>
+            </div>
+          </div>
+          
+          <p class="text-white" style="margin-bottom: 15px; margin-top: 10px;">{{ plan.exercises.length }} Exercises</p>
           
           <div class="assign-section">
             <select [(ngModel)]="selectedTraineeForPlan[plan.id!]" class="dark-input">
-              <option value="" disabled selected>Select Trainee to Assign...</option>
+              <option value="" disabled>Select Trainee to Assign...</option>
               @for (trainee of trainees; track trainee.id) {
                 <option [value]="trainee.id">{{ trainee.name }}</option>
               }
@@ -30,8 +38,9 @@
   } @else {
     <button class="btn-remove back-btn" (click)="viewMode = 'list'">← Back to Zone</button>
     
-    <div (click)="loadData()">
-      <app-create-workout-plan></app-create-workout-plan>
-    </div>
+    <app-create-workout-plan 
+      [planToEdit]="planToEdit" 
+      (planCreated)="onPlanCreated()">
+    </app-create-workout-plan>
   }
 </div>
