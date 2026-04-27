@@ -49,6 +49,12 @@
         (click)="setView('cancel')">
         My Reservations
       </button>
+      <button
+        class="nav-btn"
+        [class.active]="currentView() === 'my-plans'"
+        (click)="setView('my-plans')">
+        My Workout Plans
+      </button>
     }
   </nav>
 
@@ -61,6 +67,8 @@
       <app-book-classes></app-book-classes>
     } @else if (currentView() === 'cancel') {
       <app-cancel-reservations></app-cancel-reservations>
+    } @else if (currentView() === 'my-plans') {
+      <app-my-workout-plans></app-my-workout-plans>
     }
   </div>
 </div>

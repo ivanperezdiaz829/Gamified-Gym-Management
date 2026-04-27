@@ -54,6 +54,14 @@ export class FirebaseService {
     }
     this.auth = getAuth(this.app);
     this.db = getFirestore(this.app);
+
+    // FIX: Comprobar que estamos en el navegador antes de usar localStorage
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const savedPlans = localStorage.getItem('gym_workout_plans');
+      if (savedPlans) {
+        this.localWorkoutPlans = JSON.parse(savedPlans);
+      }
+    }
   }
 
   // User Management
@@ -219,18 +227,20 @@ async getTrainees(): Promise<User[]> {
   }
 
   async assignWorkoutPlan(plan: WorkoutPlan): Promise<string> {
-    // 1. Generate a fake ID
     const fakeId = 'plan-' + Math.random().toString(36).substring(2, 9);
     
-    // 2. Create the final object
     const newPlan = {
       ...plan,
       id: fakeId,
       createdAt: new Date()
     };
 
-    // 3. Save it to our local array instead of Firebase
     this.localWorkoutPlans.push(newPlan);
+    
+    // FIX: Comprobar que estamos en el navegador antes de guardar
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('gym_workout_plans', JSON.stringify(this.localWorkoutPlans));
+    }
     
     return fakeId;
   }
@@ -238,5 +248,31 @@ async getTrainees(): Promise<User[]> {
   async getTrainerWorkoutPlans(trainerId: string): Promise<WorkoutPlan[]> {
     // Filter our local array to only show plans made by this trainer
     return this.localWorkoutPlans.filter(plan => plan.trainerId === trainerId);
+  }
+
+  async getTraineeWorkoutPlans(traineeId: string): Promise<WorkoutPlan[]> {
+    return this.localWorkoutPlans.filter(plan => plan.traineeId === traineeId);
+  }
+
+  async deleteWorkoutPlan(planId: string): Promise<void> {
+    // Filtramos el array para quedarnos con todos los planes EXCEPTO el que queremos borrar
+    this.localWorkoutPlans = this.localWorkoutPlans.filter(plan => plan.id !== planId);
+    
+    // Guardamos el nuevo estado en el buscador
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('gym_workout_plans', JSON.stringify(this.localWorkoutPlans));
+    }
+  }
+
+  async updateWorkoutPlan(planId: string, updates: Partial<WorkoutPlan>): Promise<void> {
+    const index = this.localWorkoutPlans.findIndex(p => p.id === planId);
+    if (index !== -1) {
+      // Mezclamos los datos antiguos con los nuevos
+      this.localWorkoutPlans[index] = { ...this.localWorkoutPlans[index], ...updates };
+      
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem('gym_workout_plans', JSON.stringify(this.localWorkoutPlans));
+      }
+    }
   }
 }

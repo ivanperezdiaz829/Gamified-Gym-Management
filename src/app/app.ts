@@ -5,9 +5,9 @@ import { BookClassesComponent } from './components/book-classes/book-classes';
 import { CancelReservationsComponent } from './components/cancel-reservations/cancel-reservations';
 import { FirebaseService } from './services/firebase.service';
 import { WorkoutZoneComponent } from './components/workout-plan-page/workout-plan-page';
+import { MyWorkoutPlansComponent } from './components/my-workout-plans/my-workout-plans';
 
-// Updated 'create-plan' to 'workout-zone'
-type ViewType = 'create' | 'workout-zone' | 'book' | 'cancel';
+type ViewType = 'create' | 'workout-zone' | 'book' | 'cancel' | 'my-plans';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,8 @@ type ViewType = 'create' | 'workout-zone' | 'book' | 'cancel';
     CreateClassesComponent,
     BookClassesComponent,
     CancelReservationsComponent,
-    WorkoutZoneComponent // Replaced CreateWorkoutPlanComponent with WorkoutZoneComponent
+    WorkoutZoneComponent,
+    MyWorkoutPlansComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
