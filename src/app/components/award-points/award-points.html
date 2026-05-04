@@ -1,0 +1,59 @@
+<div class="gym-dark-theme">
+  <main class="content-wrapper">
+    <div class="panel-container">
+      <h2 class="panel-title">⭐ REWARD & PENALIZE</h2>
+      <p class="info-text">Manage points for your trainees and provide a reason for the notification.</p>
+
+      <div class="trainees-grid">
+        @for (trainee of trainees; track trainee.id) {
+          <div class="form-card">
+            
+            <div class="card-header">
+              <h3 class="text-blue" style="margin: 0;">{{ trainee.name }}</h3>
+              <span class="points-badge">{{ trainee.points || 0 }} PTS</span>
+            </div>
+
+            <!-- SECCIÓN: DAR PUNTOS (BONUS) -->
+            <div class="award-actions">
+              <p class="section-label" style="color: #39ff14;">Award Points (Bonus):</p>
+              <div class="custom-award" style="margin-bottom: 10px;">
+                <input 
+                  type="number" 
+                  [(ngModel)]="customPoints[trainee.id]" 
+                  class="dark-input flex-1" 
+                  placeholder="Pts" 
+                  min="1">
+                <input 
+                  type="text" 
+                  [(ngModel)]="awardReasonMap[trainee.id]" 
+                  class="dark-input flex-2" 
+                  placeholder="Reason...">
+              </div>
+              <button class="btn-submit w-100" (click)="givePoints(trainee.id, customPoints[trainee.id], awardReasonMap[trainee.id])">Give Points & Notify</button>
+            </div>
+
+            <!-- SECCIÓN: RESTAR PUNTOS (PENALIZACIÓN) -->
+            <div class="deduct-actions" style="margin-top: 20px; border-top: 1px dashed #444; padding-top: 15px;">
+              <p class="section-label" style="color: #ff4d4d;">Deduct Points (Penalize):</p>
+              <div class="custom-award" style="margin-bottom: 10px;">
+                <input 
+                  type="number" 
+                  [(ngModel)]="deductPointsMap[trainee.id]" 
+                  class="dark-input flex-1" 
+                  placeholder="Pts" 
+                  min="1">
+                <input 
+                  type="text" 
+                  [(ngModel)]="deductReasonMap[trainee.id]" 
+                  class="dark-input flex-2" 
+                  placeholder="Reason...">
+              </div>
+              <button class="btn-deduct w-100" (click)="removePoints(trainee.id)">Deduct Points & Notify</button>
+            </div>
+
+          </div>
+        }
+      </div>
+    </div>
+  </main>
+</div>

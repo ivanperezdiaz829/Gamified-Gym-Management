@@ -98,6 +98,34 @@
   /* Content is handled by child components */
 }
 
+/* --- ALERTS BASE --- */
+.alert-banner { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 15px 30px; 
+  border-bottom: 1px solid #333; 
+  animation: slideDown 0.3s ease-out; 
+  background-color: #1a1a1a; /* Fondo oscuro neutro por si falla algo */
+}
+.alert-content { display: flex; align-items: center; gap: 15px; }
+.alert-icon { font-size: 1.5rem; }
+.alert-text { color: #ffffff; font-size: 1rem; }
+
+/* SUCCESS ALERT (VERDE PARA PREMIOS) */
+.alert-success { background-color: rgba(57, 255, 20, 0.15); border-left: 5px solid #39ff14; }
+.text-success { color: #39ff14; font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
+.btn-success { background-color: #39ff14; color: #000; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: bold; transition: all 0.2s; }
+.btn-success:hover { background-color: #2ce60d; box-shadow: 0 0 10px rgba(57, 255, 20, 0.5); }
+
+/* DEDUCTION ALERT (ROJO PARA CASTIGOS) */
+.alert-deduction { background-color: rgba(255, 77, 77, 0.15); border-left: 5px solid #ff4d4d; }
+.text-deduction { color: #ff4d4d; font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
+.btn-deduction { background-color: #ff4d4d; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: bold; transition: all 0.2s; }
+.btn-deduction:hover { background-color: #e60000; box-shadow: 0 0 10px rgba(255, 77, 77, 0.5); }
+
+@keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
 /* =========================================
    MOBILE RESPONSIVENESS
    ========================================= */

@@ -1,4 +1,3 @@
-// 1. Añade Input a tus importaciones
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,26 +13,26 @@ import { Exercise, WorkoutPlan } from '../../models/gym.models';
 })
 export class CreateWorkoutPlanComponent implements OnInit {
   
-  // 2. Recibe el plan si estamos en modo edición
   @Input() planToEdit: WorkoutPlan | null = null;
   @Output() planCreated = new EventEmitter<void>();
 
   planName: string = '';
-  exercises: Exercise[] = [{ name: '', sets: 0, reps: 0 }];
+  
+  // CAMBIO 1: Inicializamos con null para que los placeholders se muestren
+  exercises: Exercise[] = [{ name: '', sets: null, reps: null }];
 
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit() {
-    // 3. Si recibimos un plan para editar, rellenamos el formulario
     if (this.planToEdit) {
       this.planName = this.planToEdit.planName;
-      // Hacemos una copia profunda de los ejercicios para no modificar el original hasta que no le demos a guardar
       this.exercises = JSON.parse(JSON.stringify(this.planToEdit.exercises));
     }
   }
 
   addExercise() {
-    this.exercises.push({ name: '', sets: 0, reps: 0 });
+    // CAMBIO 2: Al añadir nuevos ejercicios, también usamos null
+    this.exercises.push({ name: '', sets: null, reps: null });
   }
 
   removeExercise(index: number) {
@@ -67,9 +66,9 @@ export class CreateWorkoutPlanComponent implements OnInit {
         alert('Workout plan guardado correctamente!');
       }
 
-      // Limpiamos y avisamos de que hemos terminado
+      // CAMBIO 3: Al reiniciar el formulario tras guardar, volvemos a usar null
       this.planName = '';
-      this.exercises = [{ name: '', sets: 0, reps: 0 }];
+      this.exercises = [{ name: '', sets: null, reps: null }];
       this.planCreated.emit();
 
     } catch (error) {

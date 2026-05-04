@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700&display=swap');
+
+.gym-dark-theme { font-family: 'Roboto', sans-serif; color: #eeeeee; background-color: #111111; min-height: 100vh; }
+.content-wrapper { padding: 40px 20px; display: flex; justify-content: center; }
+.panel-container { max-width: 700px; width: 100%; padding: 30px; background-color: #1a1a1a; border-radius: 12px; border: 1px solid #333; }
+.panel-title { font-family: 'Oswald', sans-serif; text-align: center; color: #ffffff; font-size: 1.8rem; margin-top: 0; margin-bottom: 10px; }
+.info-text { color: #aaaaaa; text-align: center; margin-bottom: 30px; }
+
+.leaderboard-list { display: flex; flex-direction: column; gap: 15px; }
+
+.leaderboard-item { display: flex; align-items: center; padding: 15px 20px; background-color: #111111; border: 1px solid #333; border-radius: 8px; transition: all 0.3s ease; }
+.leaderboard-item:hover { transform: translateX(5px); border-color: #555; }
+
+/* Estilos de Top 3 */
+.top-1 { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+.top-1 .rank-circle { background-color: #ffd700; color: #000; }
+.top-1 .points-badge { color: #ffd700; }
+
+.top-2 { border-color: #c0c0c0; }
+.top-2 .rank-circle { background-color: #c0c0c0; color: #000; }
+
+.top-3 { border-color: #cd7f32; }
+.top-3 .rank-circle { background-color: #cd7f32; color: #000; }
+
+.rank-circle { width: 35px; height: 35px; border-radius: 50%; background-color: #333; display: flex; justify-content: center; align-items: center; font-family: 'Oswald', sans-serif; font-weight: bold; font-size: 1.1rem; margin-right: 20px; }
+.user-info { flex: 1; font-family: 'Oswald', sans-serif; font-size: 1.2rem; }
+.points-badge { font-family: 'Oswald', sans-serif; font-size: 1.2rem; font-weight: bold; color: #39ff14; margin-right: 20px; }
+
+.trainer-actions { display: flex; gap: 8px; border-left: 1px solid #333; padding-left: 20px; }
+.btn-award { background-color: transparent; color: #39ff14; border: 1px solid #39ff14; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: bold; transition: all 0.2s; }
+.btn-award:hover { background-color: #39ff14; color: #000; }

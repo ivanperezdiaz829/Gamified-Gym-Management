@@ -22,7 +22,7 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { environment } from '../../environments/environment';
-import { GymClass, Reservation, User, UserRole, WorkoutPlan } from '../models/gym.models';
+import { GymClass, Reservation, User, UserNotification, UserRole, WorkoutPlan } from '../models/gym.models';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +43,18 @@ export class FirebaseService {
   // Fixed IDs for consistent role switching
   private readonly FIXED_TRAINER_ID = 'trainer-001';
   private readonly FIXED_TRAINEE_ID = 'trainee-001';
-  private localWorkoutPlans: WorkoutPlan[] = []; // Local state for workout plans
+  private localWorkoutPlans: WorkoutPlan[] = []; 
+
+  // Array local de usuarios simulando una base de datos para los puntos
+  private localUsers: Array<User & { points?: number }> = [
+    { id: this.FIXED_TRAINER_ID, email: 'trainer@gym.com', name: 'Default Trainer', role: 'trainer' },
+    { id: this.FIXED_TRAINEE_ID, email: 'trainee@gym.com', name: 'Test Trainee', role: 'trainee', points: 120 },
+    { id: 'trainee-002', email: 'alex@gym.com', name: 'Alex Fitness', role: 'trainee', points: 450 },
+    { id: 'trainee-003', email: 'sarah@gym.com', name: 'Sarah Connor', role: 'trainee', points: 310 },
+    { id: 'trainee-004', email: 'mike@gym.com', name: 'Mike Tyson', role: 'trainee', points: 50 }
+  ];
+
+  private localNotifications: UserNotification[] = [];
 
   constructor() {
     // Check if Firebase is already initialized
@@ -57,9 +68,20 @@ export class FirebaseService {
 
     // FIX: Comprobar que estamos en el navegador antes de usar localStorage
     if (typeof window !== 'undefined' && window.localStorage) {
+      // Cargar planes
       const savedPlans = localStorage.getItem('gym_workout_plans');
+      const savedNotifs = localStorage.getItem('gym_notifs');
+      if (savedNotifs) {
+        this.localNotifications = JSON.parse(savedNotifs);
+      }
       if (savedPlans) {
         this.localWorkoutPlans = JSON.parse(savedPlans);
+      }
+      
+      // Cargar usuarios y puntos para que no se pierdan al recargar
+      const savedUsers = localStorage.getItem('gym_users');
+      if (savedUsers) {
+        this.localUsers = JSON.parse(savedUsers);
       }
     }
   }
@@ -113,7 +135,6 @@ export class FirebaseService {
   }
 
   async deleteClass(id: string): Promise<void> {
-    // First, delete all reservations for this class
     const reservations = await this.getClassReservations(id);
     const deletePromises = reservations.map(reservation => {
       const reservationRef = doc(this.db, 'reservations', reservation.id!);
@@ -121,7 +142,6 @@ export class FirebaseService {
     });
     await Promise.all(deletePromises);
 
-    // Then delete the class itself
     const docRef = doc(this.db, 'classes', id);
     await deleteDoc(docRef);
   }
@@ -173,7 +193,6 @@ export class FirebaseService {
       bookedAt: new Date().toISOString()
     });
 
-    // Update class attendees
     const classRef = doc(this.db, 'classes', reservation.classId);
     const classDoc = await getDoc(classRef);
     if (classDoc.exists()) {
@@ -190,7 +209,6 @@ export class FirebaseService {
     const reservationRef = doc(this.db, 'reservations', reservationId);
     await deleteDoc(reservationRef);
 
-    // Update class attendees
     const classRef = doc(this.db, 'classes', classId);
     const classDoc = await getDoc(classRef);
     if (classDoc.exists()) {
@@ -216,14 +234,19 @@ export class FirebaseService {
     return !this.hasClassStarted(gymClass);
   }
 
-async getTrainees(): Promise<User[]> {
-    // Return a fake trainee immediately without touching Firebase
-    return [{
-      id: this.FIXED_TRAINEE_ID,
-      email: 'trainee@gym.com',
-      name: 'Test Trainee',
-      role: 'trainee'
-    }];
+  // ==========================================
+  // LOCAL MOCK METHODS (Workouts y Puntos)
+  // ==========================================
+
+  async getTrainees(): Promise<User[]> {
+    // ACTUALIZADO: Ahora lee de nuestro array de memoria en lugar de un solo usuario hardcodeado
+    return this.localUsers.filter(u => u.role === 'trainee');
+  }
+
+  async getLeaderboard(): Promise<User[]> {
+    // Obtener y ordenar por puntos (de mayor a menor)
+    const trainees = await this.getTrainees();
+    return trainees.sort((a, b) => (b.points || 0) - (a.points || 0));
   }
 
   async assignWorkoutPlan(plan: WorkoutPlan): Promise<string> {
@@ -232,12 +255,11 @@ async getTrainees(): Promise<User[]> {
     const newPlan = {
       ...plan,
       id: fakeId,
-      createdAt: new Date()
+      createdAt: new Date() // Corregido a ISO string
     };
 
     this.localWorkoutPlans.push(newPlan);
     
-    // FIX: Comprobar que estamos en el navegador antes de guardar
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.setItem('gym_workout_plans', JSON.stringify(this.localWorkoutPlans));
     }
@@ -246,7 +268,6 @@ async getTrainees(): Promise<User[]> {
   }
 
   async getTrainerWorkoutPlans(trainerId: string): Promise<WorkoutPlan[]> {
-    // Filter our local array to only show plans made by this trainer
     return this.localWorkoutPlans.filter(plan => plan.trainerId === trainerId);
   }
 
@@ -255,10 +276,8 @@ async getTrainees(): Promise<User[]> {
   }
 
   async deleteWorkoutPlan(planId: string): Promise<void> {
-    // Filtramos el array para quedarnos con todos los planes EXCEPTO el que queremos borrar
     this.localWorkoutPlans = this.localWorkoutPlans.filter(plan => plan.id !== planId);
     
-    // Guardamos el nuevo estado en el buscador
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.setItem('gym_workout_plans', JSON.stringify(this.localWorkoutPlans));
     }
@@ -267,11 +286,72 @@ async getTrainees(): Promise<User[]> {
   async updateWorkoutPlan(planId: string, updates: Partial<WorkoutPlan>): Promise<void> {
     const index = this.localWorkoutPlans.findIndex(p => p.id === planId);
     if (index !== -1) {
-      // Mezclamos los datos antiguos con los nuevos
       this.localWorkoutPlans[index] = { ...this.localWorkoutPlans[index], ...updates };
       
       if (typeof window !== 'undefined' && window.localStorage) {
         localStorage.setItem('gym_workout_plans', JSON.stringify(this.localWorkoutPlans));
+      }
+    }
+  }
+
+async awardPoints(traineeId: string, pointsToAdd: number, reason: string): Promise<void> {
+    const userIndex = this.localUsers.findIndex(u => u.id === traineeId);
+    if (userIndex !== -1) {
+      const currentPoints = this.localUsers[userIndex].points || 0;
+      this.localUsers[userIndex].points = currentPoints + pointsToAdd;
+      
+      // NUEVO: Crear la notificación de éxito (PREMIO)
+      const newNotif: UserNotification = {
+        id: 'notif-' + Math.random().toString(36).substring(2, 9),
+        traineeId: traineeId,
+        message: `You have earned ${pointsToAdd} points! Reason: ${reason}`,
+        date: new Date().toISOString(),
+        isRead: false,
+        type: 'success'
+      };
+      this.localNotifications.push(newNotif);
+
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem('gym_users', JSON.stringify(this.localUsers));
+        localStorage.setItem('gym_notifs', JSON.stringify(this.localNotifications));
+      }
+    }
+  }
+
+  async deductPoints(traineeId: string, pointsToDeduct: number, reason: string): Promise<void> {
+    const userIndex = this.localUsers.findIndex(u => u.id === traineeId);
+    if (userIndex !== -1) {
+      const currentPoints = this.localUsers[userIndex].points || 0;
+      this.localUsers[userIndex].points = Math.max(0, currentPoints - pointsToDeduct);
+      
+      // Actualizamos la notificación de castigo para añadir el type
+      const newNotif: UserNotification = {
+        id: 'notif-' + Math.random().toString(36).substring(2, 9),
+        traineeId: traineeId,
+        message: `You have lost ${pointsToDeduct} points. Reason: ${reason}`,
+        date: new Date().toISOString(),
+        isRead: false,
+        type: 'deduction'
+      };
+      this.localNotifications.push(newNotif);
+
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem('gym_users', JSON.stringify(this.localUsers));
+        localStorage.setItem('gym_notifs', JSON.stringify(this.localNotifications));
+      }
+    }
+  }
+
+  async getUnreadNotifications(traineeId: string): Promise<UserNotification[]> {
+    return this.localNotifications.filter(n => n.traineeId === traineeId && !n.isRead);
+  }
+
+  async markNotificationAsRead(notificationId: string): Promise<void> {
+    const notif = this.localNotifications.find(n => n.id === notificationId);
+    if (notif) {
+      notif.isRead = true;
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem('gym_notifs', JSON.stringify(this.localNotifications));
       }
     }
   }

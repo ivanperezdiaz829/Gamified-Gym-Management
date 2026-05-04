@@ -1,0 +1,24 @@
+<div class="gym-dark-theme">
+  <main class="content-wrapper">
+    <div class="panel-container">
+      <h2 class="panel-title">🏆 GLOBAL LEADERBOARD</h2>
+      <p class="info-text">Top trainees earning points for classes and workouts!</p>
+
+      <div class="leaderboard-list">
+        @for (user of leaderboard; track user.id; let i = $index) {
+          <div class="leaderboard-item" [class.top-1]="i === 0" [class.top-2]="i === 1" [class.top-3]="i === 2">
+            
+            <div class="rank-circle">{{ i + 1 }}</div>
+            
+            <div class="user-info">
+              <strong>{{ user.name }}</strong>
+            </div>
+            
+            <div class="points-badge">{{ user.points || 0 }} PTS</div>
+
+          </div>
+        }
+      </div>
+    </div>
+  </main>
+</div>

@@ -4,6 +4,7 @@
       <span class="text-white">Gym</span> <span class="text-blue">Management</span>
     </div>
 
+    <!-- SELECTOR DE ROL PRINCIPAL -->
     <div class="role-selector">
       <button
         class="role-btn"
@@ -20,56 +21,66 @@
     </div>
   </header>
 
+  <!-- Menú de Navegación -->
   <nav class="navigation">
     @if (currentUserRole() === 'trainer') {
-      <button
-        class="nav-btn"
-        [class.active]="currentView() === 'create'"
-        (click)="setView('create')">
-        Create Classes
-      </button>
-      
-      <button
-        class="nav-btn"
-        [class.active]="currentView() === 'workout-zone'"
-        (click)="setView('workout-zone')">
-        Workout Plans
-      </button>
-
+      <button class="nav-btn" [class.active]="currentView() === 'create'" (click)="setView('create')">Classes</button>
+      <button class="nav-btn" [class.active]="currentView() === 'workout-zone'" (click)="setView('workout-zone')">Workout Plans</button>
+      <button class="nav-btn" [class.active]="currentView() === 'leaderboard'" (click)="setView('leaderboard')">Leaderboard</button>
+      <button class="nav-btn" [class.active]="currentView() === 'award-points'" (click)="setView('award-points')">Manage Points</button>
     } @else {
-      <button
-        class="nav-btn"
-        [class.active]="currentView() === 'book'"
-        (click)="setView('book')">
-        Book Classes
-      </button>
-      <button
-        class="nav-btn"
-        [class.active]="currentView() === 'cancel'"
-        (click)="setView('cancel')">
-        My Reservations
-      </button>
-      <button
-        class="nav-btn"
-        [class.active]="currentView() === 'my-plans'"
-        (click)="setView('my-plans')">
-        My Workout Plans
-      </button>
+      <button class="nav-btn" [class.active]="currentView() === 'book'" (click)="setView('book')">Book Class</button>
+      <button class="nav-btn" [class.active]="currentView() === 'cancel'" (click)="setView('cancel')">My Reservations</button>
+      <button class="nav-btn" [class.active]="currentView() === 'my-plans'" (click)="setView('my-plans')">My Workouts</button>
+      <button class="nav-btn" [class.active]="currentView() === 'leaderboard'" (click)="setView('leaderboard')">Leaderboard</button>
     }
   </nav>
 
+<!-- BANNER DE NOTIFICACIONES -->
+  @for (notif of unreadNotifications(); track notif.id) {
+    <div class="alert-banner" 
+         [class.alert-success]="notif.type === 'success'" 
+         [class.alert-deduction]="notif.type === 'deduction'">
+      
+      <div class="alert-content">
+        <span class="alert-icon">{{ notif.type === 'success' ? '🎉' : '⚠️' }}</span>
+        <span class="alert-text">
+          @if (notif.type === 'success') {
+            <strong class="text-success">¡CONGRATULATIONS!</strong>
+          } @else {
+            <strong class="text-deduction">¡ATTENTION!</strong>
+          }
+          {{ notif.message }}
+        </span>
+      </div>
+      
+      <button class="btn-dismiss" 
+              [class.btn-success]="notif.type === 'success'" 
+              [class.btn-deduction]="notif.type === 'deduction'" 
+              (click)="dismissNotification(notif.id)">
+        OK
+      </button>
+    </div>
+  }
+
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="content">
     @if (currentView() === 'create') {
       <app-create-classes></app-create-classes>
-    } @else if (currentView() === 'workout-zone') {
-      <app-workout-zone></app-workout-zone>
     } @else if (currentView() === 'book') {
       <app-book-classes></app-book-classes>
     } @else if (currentView() === 'cancel') {
       <app-cancel-reservations></app-cancel-reservations>
     } @else if (currentView() === 'my-plans') {
       <app-my-workout-plans></app-my-workout-plans>
+    } @else if (currentView() === 'workout-zone') {
+      <app-workout-zone></app-workout-zone>
+    } @else if (currentView() === 'leaderboard') {
+      <app-leaderboard></app-leaderboard>
+    } @else if (currentView() === 'award-points') {
+      <app-award-points></app-award-points>
     }
   </div>
 </div>
+
 <router-outlet></router-outlet>

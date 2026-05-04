@@ -11,6 +11,7 @@ export interface User {
   email: string;
   name: string;
   role: UserRole;
+  points?: number; // Solo para trainees
 }
 
 /**
@@ -44,8 +45,8 @@ export interface Reservation {
 
 export interface Exercise {
   name: string;
-  sets: number;
-  reps: number;
+  sets: number | null;
+  reps: number | null;
   notes?: string;
 }
 
@@ -63,4 +64,14 @@ export interface Trainee {
   name: string;
   email: string;
   role: 'trainee';
+}
+
+
+export interface UserNotification {
+  id: string;
+  traineeId: string;
+  message: string;
+  date: string;
+  isRead: boolean;
+  type: 'success' | 'deduction';
 }
